@@ -1,5 +1,9 @@
 # Données sous licence (PFF / NGS / BDB) : jamais commitées
 data/
+*.zip
+*.tar.gz
+*.tgz
+
 
 # Secrets
 .env

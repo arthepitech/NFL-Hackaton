@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: trenchlab-api
+    runtime: python
+    region: frankfurt # ou oregon / ohio selon votre préférence
+    plan: free
+    buildCommand: "pip install -e . && python scripts/download_data.py"
+    startCommand: "uvicorn api.main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATA_PROCESSED_URL
+        sync: false
+      - key: CORS_ORIGIN_REGEX
+        value: "https://.*\\.vercel\\.app"
