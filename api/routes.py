@@ -15,41 +15,41 @@ router = APIRouter(prefix="/api")
 
 Metric = Literal["pbwr_pff", "pbwr_tracking", "island", "ttp", "pressure_rate", "time_to_throw"]
 
-# Vocabulaire football (CLAUDE.md §7) : définitions visibles au survol.
+# Français courant (CLAUDE.md §7) : libellé court, phrase d'aide visible avec le bouton « ? ».
 DEFINITIONS = {
     "pbwr_pff": {
-        "label": "Blocs gagnés (PFF)",
-        "definition": "Part des snaps en protection sans pression concédée ni défaite notée par "
-        "PFF.",
+        "label": "Blocs réussis",
+        "definition": "Part de ses actions de protection où il n'a laissé passer aucune pression "
+        "et n'a pas été battu, selon les analystes vidéo (PFF).",
         "better": "high",
     },
     "pbwr_tracking": {
-        "label": "Blocs gagnés (tracking)",
-        "definition": "Part des snaps où son défenseur n'arrive pas à moins de {r} yd du QB "
-        "avant {w} s.",
+        "label": "Blocs réussis (capteurs)",
+        "definition": "Même idée, mesurée par les capteurs GPS : son défenseur n'arrive pas à "
+        "moins de {r} yard du quarterback dans les {w} premières secondes.",
         "better": "high",
     },
     "island": {
-        "label": "Blocs gagnés seul (island)",
-        "definition": "Blocs gagnés (PFF) sur les snaps où aucun coéquipier n'aide sur son "
-        "défenseur (chip, aide ou pickup du backfield, switch).",
+        "label": "Blocs réussis sans aide",
+        "definition": "Blocs réussis quand aucun coéquipier ne vient l'aider sur son défenseur.",
         "better": "high",
     },
     "ttp": {
-        "label": "Temps avant pression",
-        "definition": "Médiane des secondes entre le snap et l'arrivée de son défenseur à moins "
-        "de {r} yd du QB, sur les snaps où elle arrive.",
+        "label": "Délai avant pression",
+        "definition": "Quand son défenseur arrive près du quarterback (moins de {r} yard), "
+        "combien de secondes après le début de l'action. Plus c'est long, mieux c'est.",
         "better": "high",
     },
     "pressure_rate": {
-        "label": "Pressions concédées",
-        "definition": "Part des snaps avec hurry, hit ou sack concédé.",
+        "label": "Pressions laissées passer",
+        "definition": "Part de ses actions où son défenseur a gêné, touché ou plaqué le "
+        "quarterback. Plus c'est bas, mieux c'est.",
         "better": "low",
     },
     "time_to_throw": {
-        "label": "Temps avant la passe",
-        "definition": "Médiane des secondes entre le snap et la passe, le sack ou le départ du "
-        "QB. Dépend du QB, pas du bloqueur.",
+        "label": "Temps pour lancer",
+        "definition": "Temps médian dont dispose le quarterback avant de lancer. Dépend surtout "
+        "du quarterback : à lire à côté des blocs réussis.",
         "better": None,
     },
 }
@@ -201,8 +201,9 @@ def scout_card(
             {
                 "kind": "pbwr_gap",
                 "points": pts,
-                "message": f"PFF et tracking divergent de {pts:+.1f} points "
-                f"({metrics['pbwr_pff']['n']} snaps) : à revoir sur les clips.",
+                "message": "Les analystes vidéo et les capteurs ne sont pas d'accord "
+                f"({pts:+.1f} points "
+                f"sur {metrics['pbwr_pff']['n']} actions) : à vérifier sur les vidéos.",
             }
         )
     alignments = mine["pff_positionLinedUp"].drop_nulls()

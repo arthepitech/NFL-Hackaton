@@ -24,7 +24,7 @@ export function FakeVideo({ duel, cursorT, label }: Props) {
     ctx.fillStyle = '#6b7280'
     ctx.font = '18px system-ui'
     ctx.textAlign = 'center'
-    ctx.fillText('Vidéo All-22 non branchée : lecteur factice', W / 2, H / 2)
+    ctx.fillText('Vidéo non branchée : aperçu des trajectoires', W / 2, H / 2)
     ctx.textAlign = 'start'
     if (!duel || duel.series.length === 0) return
     const pts = duel.series.filter((p) => p.t >= 0 && p.t <= cursorT)
@@ -67,7 +67,7 @@ export function FakeVideo({ duel, cursorT, label }: Props) {
     <figure className="video">
       <canvas ref={ref} width={W} height={H} role="img" aria-label={`Clip factice : ${label}`} />
       <figcaption>
-        {label} · t = {cursorT.toFixed(1)} s · bleu : bloqueur · orange : rusher
+        {label} · t = {cursorT.toFixed(1)} s · bleu : le bloqueur · orange : son défenseur
       </figcaption>
     </figure>
   )

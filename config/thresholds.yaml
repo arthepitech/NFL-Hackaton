@@ -12,3 +12,4 @@ set_window_s: 0.5            # diagnostic Set : fenêtre d'observation du recul 
 set_min_retreat_yd: 0.2      # diagnostic Set : quartile bas du recul des tackles en 0,5 s (2021)
 power_min_retreat_yd: 1.5    # diagnostic Puissance : recul du bloqueur vers le QB
 power_min_rusher_speed_yd_s: 2.0  # diagnostic Puissance : vitesse conservée par le rusher
+badge_context_gap_pts: 0.15   # badge rouge : PBWR d'un contexte < PBWR global − 15 pts (exemple du cahier)

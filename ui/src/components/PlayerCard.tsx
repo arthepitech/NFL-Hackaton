@@ -49,8 +49,8 @@ export function PlayerCard({ playerId, name, tier, minSnaps }: Props) {
         <div>
           <h2>{name}</h2>
           <p className="muted">
-            Semaine {week.week} · {week.n} snaps
-            {week.n < minSnaps ? ' · échantillon faible' : ''}
+            Semaine {week.week} · {week.n} actions
+            {week.n < minSnaps ? ' · peu d’actions' : ''}
           </p>
         </div>
         <button
@@ -64,13 +64,13 @@ export function PlayerCard({ playerId, name, tier, minSnaps }: Props) {
       </header>
       <dl className={week.n < minSnaps ? 'pcard__stats tile--low' : 'pcard__stats'}>
         <div>
-          <dt>Blocs gagnés</dt>
+          <dt>Blocs réussis</dt>
           <dd>{pct(week.pbwr_pff)}</dd>
         </div>
         <div>
-          <dt>Temps avant pression</dt>
+          <dt>Délai avant pression</dt>
           <dd>{secs(week.ttp)}</dd>
-          <dd className="muted">{week.ttp_n} pressions</dd>
+          <dd className="muted">{week.ttp_n} pressions subies</dd>
         </div>
         <div>
           <dt>Tendance</dt>
@@ -80,7 +80,7 @@ export function PlayerCard({ playerId, name, tier, minSnaps }: Props) {
       </dl>
       {tier && (
         <p className={`badge badge--${tier}`}>
-          {tier === 'top' ? 'Top 10 % des OL (saison)' : 'Bottom 10 % des OL (saison)'}
+          {tier === 'top' ? 'Parmi les 10 % meilleurs de la ligue' : 'Parmi les 10 % moins bons de la ligue'}
         </p>
       )}
     </article>

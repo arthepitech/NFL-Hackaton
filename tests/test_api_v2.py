@@ -107,3 +107,10 @@ def test_recruiter_views(client):
     sc = client.get("/api/speed-scatter", params={"fast_speed": 0.5}).json()
     assert sc["points"][0]["weight"] == 310
     assert sc["configured_fast_speed"] == 8.0
+
+
+def test_v3_badges_and_scout_status(client):
+    # 1 snap : pas de badge de rang (échantillon < min_snaps_display), pas de contexte noté.
+    assert client.get("/api/players/10/badges").json() == []
+    status = client.get("/api/scout/status").json()
+    assert status["available"] is False and "BDB 2027" in status["message"]

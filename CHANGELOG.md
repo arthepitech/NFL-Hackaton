@@ -2,6 +2,32 @@
 
 ## [Non publié]
 
+### Modifié — Lisibilité et ergonomie (docs/plans/ux-simplification.md)
+- Français courant partout (« actions », « blocs réussis », « délai avant pression »…), terme football entre parenthèses ; onglets renommés.
+- Filtres : situations prêtes en un clic, filtres détaillés repliés par thème, filtres actifs en étiquettes retirables.
+- Chaque chiffre : phrase d'aide « ? », « sur N actions », « Voir les actions ».
+- Style modernisé (en-tête fixe, cartes, onglets en pastilles), aucun débordement horizontal sur téléphone.
+- Listes avec recherche partout (joueurs, équipes par nom complet, filtres, duels, playlists) : saisie sans accents ni majuscules, clavier et tactile.
+- Aucune règle de calcul modifiée.
+
+### Ajouté — Phase 4 (V3 réduite, décision 0006)
+- Module Scout : schéma et connecteur Combine (BDB 2027 indisponible, signalé).
+- Badges top / bottom 10 % et écart de contexte (`badge_context_gap_pts`, seuil signalé).
+- Rapport adverse exportable en PDF (impression navigateur).
+- Replay 3D C10 (react-three-fiber), 2D par défaut.
+
+### Ajouté — Phase 3 (V2)
+- **Métriques** : Island Win Rate, vitesse du rusher, paquets de pression, gap d'origine des pressions, diagnostic assisté (règles explicables).
+- **Données du staff** : `club.duckdb` (tags du coach, playlists, index vidéo).
+- **API V2** : matchups et projection, protection, couvertures, paquets, trajectoires, diagnostic, vidéo, set, playlists, radar, ligue, nuage de vitesse.
+- **Interface** :
+  - onglet Matchups (C4–C7) ;
+  - C8 et C9, radar R1 dans la Scout Card ;
+  - diagnostic à confirmer ou corriger, synchronisation vidéo, playlists dans le Play Lab ;
+  - J2, J4 et J5 côté joueur ;
+  - onglet Recruteur (R1–R3).
+- **Seuils signalés** dans `config/thresholds.yaml` : `heavy_rusher_pct`, `set_window_s`, `set_min_retreat_yd`, `power_min_retreat_yd`, `power_min_rusher_speed_yd_s`.
+
 ### Ajouté — Phase 2 (MVP)
 - **Métriques** (`metrics/`) :
   - alignement bloqueur / rusher / QB image par image ;

@@ -29,13 +29,17 @@
 - [x] UI : Scout Card OL, filtres, liste des défaites, C1, C2, C3, J1, J3
 - [x] Captures d'écran
 - [x] Docker (compose API + UI)
-- [ ] **STOP : validation du MVP par le propriétaire**
+- [x] Validation du MVP (commit du propriétaire)
 
 ## Phase 3 — V2 (après validation)
-- [ ] Trancher : radar comparatif R1 en V2 (VISUALISATIONS, prompt) ou V3 (CLAUDE.md §3)
-- [ ] Matrice OL × DL, couverture × situation, paquets de pression, diagnostic assisté, synchro vidéo
-- [ ] Visuels C4–C9, J2, J4, J5, R1–R3
+- [x] R1 en V2 (décision 0005 §1)
+- [x] Matrice OL × DL, couverture × situation, paquets de pression, diagnostic assisté, synchro vidéo
+- [x] Visuels C4–C9, J2, J4, J5, R1–R3
 
 ## Phase 4 — V3 (après validation)
-- [ ] Module Scout (BDB 2027 : schéma + connecteur vide si inaccessible), badges, rapport PDF
-- [ ] 3D C10–C13, J6–J7, R7–R8 avec équivalent 2D
+Périmètre réduit à la demande du propriétaire (≈ 30 min) :
+- [x] Module Scout : schéma + connecteur vide (BDB 2027 non accessible)
+- [x] Badges top / bottom 10 % + écart de contexte
+- [x] Rapport adverse PDF (impression navigateur)
+- [x] 3D C10 (replay) avec 2D par défaut
+- Reportés : C11–C13, J6–J7, R4–R8

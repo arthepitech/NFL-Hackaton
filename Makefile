@@ -2,7 +2,7 @@ PY      := .venv/bin/python
 DATA    := data
 N_TRACKING := 122
 
-.PHONY: install data etl test lint check-metrics api ui
+.PHONY: install data etl test lint check-metrics api ui start
 
 install:
 	python3.12 -m venv .venv
@@ -38,6 +38,41 @@ api:
 
 ui:
 	cd ui && npm run dev
+
+# Tout lancer d'un coup (installation et ETL si besoin) : voir start.sh
+start:
+	./start.sh
+
+# --- Gestion des serveurs : make stop / make re / make status ---
+PORTS := 8000 5173
+.PHONY: stop re status
+
+# Libère les ports de l'API (8000) et de l'interface (5173), en local comme sous Docker.
+stop:
+	@if command -v docker >/dev/null 2>&1 && [ -n "$$(docker compose ps -q 2>/dev/null)" ]; then \
+	  echo "Arrêt des conteneurs Docker…"; docker compose down; fi
+	@for p in $(PORTS); do \
+	  pids=$$( (lsof -ti tcp:$$p 2>/dev/null || fuser $$p/tcp 2>/dev/null) | tr -s ' ' '\n' | sort -u); \
+	  if [ -n "$$pids" ]; then kill $$pids 2>/dev/null; echo "port $$p libéré"; \
+	  else echo "port $$p déjà libre"; fi; \
+	done
+	@sleep 1
+	@for p in $(PORTS); do \
+	  pids=$$(lsof -ti tcp:$$p 2>/dev/null); \
+	  if [ -n "$$pids" ]; then kill -9 $$pids 2>/dev/null; echo "port $$p : arrêt forcé"; fi; \
+	done
+
+# Arrête tout puis relance (installation et ETL si besoin).
+re: stop start
+
+# Ce qui tourne sur les ports de Trench Lab.
+status:
+	@for p in $(PORTS); do \
+	  if curl -sf -o /dev/null "http://localhost:$$p$$( [ $$p = 8000 ] && echo /health )"; then \
+	    echo "port $$p : en marche"; \
+	  elif lsof -ti tcp:$$p >/dev/null 2>&1; then echo "port $$p : occupé (ne répond pas)"; \
+	  else echo "port $$p : libre"; fi; \
+	done
 
 # --- Docker (modèle : inspiration/Makefile_docker, décision 0004 §5) ---
 .PHONY: docker-build docker-up docker-down docker-etl docker-test docker-lint docker-check-metrics docker-shell docker-logs

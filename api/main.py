@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes import router
 from api.routes_v2 import router as router_v2
+from api.routes_v3 import router as router_v3
 from api.store import Store
 from config import settings
 
@@ -21,6 +22,7 @@ def create_app(processed_dir: Path = settings.PROCESSED_DIR) -> FastAPI:
     )
     app.include_router(router)
     app.include_router(router_v2)
+    app.include_router(router_v3)
 
     @app.get("/health")
     def health() -> dict[str, str]:

@@ -11,10 +11,10 @@ interface Props {
 }
 
 const PANELS: { key: keyof DuelPoint; label: string; scale?: number; ref?: 'radius' }[] = [
-  { key: 'd_qb', label: 'Distance rusher → QB (yd)', ref: 'radius' },
-  { key: 'rusher_s', label: 'Vitesse du rusher (mph)', scale: YDS_TO_MPH },
-  { key: 'depth_gap', label: 'Profondeur bloqueur − QB (yd)' },
-  { key: 'shoulder_angle', label: 'Angle épaules bloqueur / course rusher (°)' },
+  { key: 'd_qb', label: 'Distance défenseur → quarterback (yards)', ref: 'radius' },
+  { key: 'rusher_s', label: 'Vitesse du défenseur (mph)', scale: YDS_TO_MPH },
+  { key: 'depth_gap', label: 'Écart bloqueur – quarterback (yards)' },
+  { key: 'shoulder_angle', label: 'Angle des épaules du bloqueur face au défenseur (°)' },
 ]
 
 const WIDTH = 720

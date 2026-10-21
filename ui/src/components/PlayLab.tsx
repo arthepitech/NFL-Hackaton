@@ -3,9 +3,13 @@ import { api } from '../api'
 import type { DuelData, PlayData } from '../api'
 import { BLOCK_TYPES, downDistance } from '../format'
 import { DuelTimeline } from './DuelTimeline'
-import { FakeVideo } from './FakeVideo'
+import { AddToPlaylist } from './AddToPlaylist'
+import { DiagnosisPanel } from './DiagnosisPanel'
 import { FieldCanvas, type Focus } from './FieldCanvas'
+import { Replay3D } from './Replay3D'
+import { VideoSync } from './VideoSync'
 import type { OpenPlay } from './PlayList'
+import { SearchSelect } from './SearchSelect'
 
 const SPEEDS = [0.25, 0.5, 1]
 const FPS = 10 // fréquence du tracking (CLAUDE.md §7 : 10 images/s minimum)
@@ -13,15 +17,19 @@ const FPS = 10 // fréquence du tracking (CLAUDE.md §7 : 10 images/s minimum)
 interface Props {
   target: OpenPlay | null
   radius: number
+  /** Lecture enchaînée d'une playlist (J5). */
+  remaining?: number
+  onNext?: () => void
 }
 
-export function PlayLab({ target, radius }: Props) {
+export function PlayLab({ target, radius, remaining = 0, onNext }: Props) {
   const [play, setPlay] = useState<PlayData | null>(null)
   const [duel, setDuel] = useState<DuelData | null>(null)
   const [focus, setFocus] = useState<Focus | null>(null)
   const [frame, setFrame] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [speed, setSpeed] = useState(1)
+  const [threeD, setThreeD] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -79,7 +87,7 @@ export function PlayLab({ target, radius }: Props) {
   if (!target) {
     return (
       <p className="muted">
-        Ouvre un jeu depuis la Scout Card (un chiffre ou une défaite) pour le rejouer ici.
+        Choisissez une action depuis la fiche d’un joueur (un chiffre ou une défaite) pour la revoir ici.
       </p>
     )
   }
@@ -100,23 +108,19 @@ export function PlayLab({ target, radius }: Props) {
           {m.possessionTeam} contre {m.defensiveTeam}
         </h2>
         <p className="muted">{m.playDescription}</p>
-        <label className="filters__select">
-          <span className="filters__label">Duel</span>
-          <select
-            value={focus ? `${focus.blockerId}-${focus.rusherId}` : ''}
-            onChange={(e) => {
-              const [b, r] = e.target.value.split('-').map(Number)
-              setFocus({ blockerId: b, rusherId: r })
-            }}
-          >
-            {play.blocks.map((b) => (
-              <option key={`${b.blockerId}-${b.rusherId}`} value={`${b.blockerId}-${b.rusherId}`}>
-                {names.get(String(b.blockerId))} → {names.get(String(b.rusherId))} ·{' '}
-                {BLOCK_TYPES[b.blockType ?? ''] ?? '—'}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SearchSelect
+          label="Duel à suivre"
+          value={focus ? `${focus.blockerId}-${focus.rusherId}` : ''}
+          options={play.blocks.map((b) => ({
+            value: `${b.blockerId}-${b.rusherId}`,
+            label: `${names.get(String(b.blockerId))} → ${names.get(String(b.rusherId))}`,
+            hint: BLOCK_TYPES[b.blockType ?? ''] ?? undefined,
+          }))}
+          onChange={(v) => {
+            const [b, r] = v.split('-').map(Number)
+            setFocus({ blockerId: b, rusherId: r })
+          }}
+        />
       </header>
 
       <div className="controls" role="toolbar" aria-label="Lecture">
@@ -142,7 +146,7 @@ export function PlayLab({ target, radius }: Props) {
         ))}
         {duel?.markers.defeat != null && (
           <button type="button" onClick={() => seek(duel.markers.defeat as number)}>
-            Aller à la défaite
+            Aller au moment de la défaite
           </button>
         )}
         <input
@@ -154,19 +158,59 @@ export function PlayLab({ target, radius }: Props) {
           onChange={(e) => setFrame(Number(e.target.value))}
         />
         <span className="controls__time">t = {cursorT.toFixed(1)} s</span>
+        {remaining > 0 && onNext && (
+          <button type="button" className="chip chip--on" onClick={onNext}>
+            Clip suivant ({remaining})
+          </button>
+        )}
       </div>
 
       <div className="playlab__grid">
-        <FieldCanvas play={play} frameIndex={frame} focus={focus} radius={radius} />
+        <div>
+          <div className="toolbar">
+            <button type="button" className={`chip${!threeD ? ' chip--on' : ''}`} aria-pressed={!threeD} onClick={() => setThreeD(false)}>
+              Vue 2D
+            </button>
+            <button type="button" className={`chip${threeD ? ' chip--on' : ''}`} aria-pressed={threeD} onClick={() => setThreeD(true)}>
+              Replay 3D
+            </button>
+          </div>
+          {threeD ? (
+            <Replay3D play={play} frameIndex={frame} focus={focus} />
+          ) : (
+            <FieldCanvas play={play} frameIndex={frame} focus={focus} radius={radius} />
+          )}
+        </div>
         <div className="playlab__side">
-          <FakeVideo duel={duel} cursorT={cursorT} label={duelLabel} />
+          <VideoSync
+            gameId={Number(m.gameId)}
+            playId={Number(m.playId)}
+            duel={duel}
+            cursorT={cursorT}
+            playing={playing}
+            label={duelLabel}
+          />
           {duel && focus?.rusherId != null ? (
             <DuelTimeline duel={duel} cursorT={cursorT} radius={radius} onSeek={seek} />
           ) : (
-            <p className="muted">Pas de défenseur bloqué noté sur ce snap : timeline indisponible.</p>
+            <p className="muted">Pas de défenseur attribué à ce bloqueur sur cette action : courbes indisponibles.</p>
           )}
         </div>
       </div>
+      {focus && (
+        <div className="two-cols">
+          <DiagnosisPanel gameId={Number(m.gameId)} playId={Number(m.playId)} blockerId={focus.blockerId} />
+          <section className="panel">
+            <h3>Playlist du joueur</h3>
+            <AddToPlaylist
+              gameId={Number(m.gameId)}
+              playId={Number(m.playId)}
+              nflId={focus.blockerId}
+              t={cursorT}
+            />
+          </section>
+        </div>
+      )}
     </div>
   )
 }

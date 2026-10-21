@@ -5,6 +5,7 @@ import { toQuery } from './api'
 describe('format', () => {
   it('affiche pourcentages et secondes', () => {
     expect(format.formatMetric('pbwr_pff', 0.9123)).toBe('91.2 %')
+    expect(format.pct(0.9123)).toBe('91 %')
     expect(format.formatMetric('ttp', 2.14)).toBe('2.1 s')
     expect(format.formatMetric('pressure_rate', null)).toBe('—')
   })
@@ -12,10 +13,10 @@ describe('format', () => {
     expect(format.mph(8)).toBe('16.4 mph')
   })
   it('parle football', () => {
-    expect(format.downDistance(3, 7)).toBe('3rd & 7')
+    expect(format.downDistance(3, 7)).toBe('3e tentative, 7 yards à gagner')
     expect(format.optionLabel('quarter', 5)).toBe('Prolongation')
-    expect(format.optionLabel('distance', 'long')).toBe('Long (≥ 7)')
-    expect(format.heightLabel(77)).toBe('6\'5"')
+    expect(format.optionLabel('distance', 'long')).toBe('Long (7 et +)')
+    expect(format.heightLabel(77)).toBe('196 cm (6\'5")')
     expect('toQueryLabel' in format).toBe(false)
   })
   it('construit la requête de filtres', () => {

@@ -27,6 +27,7 @@ THRESHOLD_KEYS = (
     "set_min_retreat_yd",
     "power_min_retreat_yd",
     "power_min_rusher_speed_yd_s",
+    "badge_context_gap_pts",
 )
 
 

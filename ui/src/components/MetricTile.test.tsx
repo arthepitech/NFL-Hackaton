@@ -16,12 +16,14 @@ describe('MetricTile', () => {
         onOpen={onOpen}
       />,
     )
-    const tile = screen.getByRole('button')
-    expect(tile).toHaveClass('tile--low')
-    expect(tile).toHaveTextContent('42 snaps · échantillon faible')
-    expect(tile).toHaveAttribute('title', 'Part des snaps…')
+    const tile = screen.getByRole('button', { name: /Voir les actions/ })
+    expect(tile.parentElement).toHaveClass('tile--low')
+    expect(tile).toHaveTextContent('sur 42 actions · peu d’actions')
     fireEvent.click(tile)
     expect(onOpen).toHaveBeenCalledWith('pbwr_pff')
+    // Aide « ? » : la définition s'affiche en clair.
+    fireEvent.click(screen.getByRole('button', { name: /Qu’est-ce que/ }))
+    expect(screen.getByText('Part des snaps…')).toBeInTheDocument()
   })
 
   it('colore top et bottom 10 % avec un libellé explicite', () => {
@@ -34,8 +36,8 @@ describe('MetricTile', () => {
         onOpen={() => {}}
       />,
     )
-    const tile = screen.getByRole('button')
-    expect(tile).toHaveClass('tile--bottom')
-    expect(tile).toHaveTextContent('Bottom 10 %')
+    const tile = screen.getByRole('button', { name: /Voir les actions/ })
+    expect(tile.parentElement).toHaveClass('tile--bottom')
+    expect(tile).toHaveTextContent('Parmi les 10 % moins bons')
   })
 })

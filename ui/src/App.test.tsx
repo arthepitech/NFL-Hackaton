@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 
@@ -23,7 +23,7 @@ const META = {
 afterEach(() => vi.unstubAllGlobals())
 
 describe('App', () => {
-  it('affiche les niveaux dans l’ordre, Matchups réservé à la V2', async () => {
+  it('affiche les vues en français courant et les situations prêtes', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn((url: string) =>
@@ -33,14 +33,17 @@ describe('App', () => {
     render(<App />)
     const tabs = screen.getByRole('navigation').querySelectorAll('button')
     expect([...tabs].map((b) => b.textContent)).toEqual([
-      'Scout Card',
-      'Matchups',
-      'Play Lab',
-      'Carte joueur',
+      'Fiche joueur',
+      'Duels et adversaire',
+      'Revoir une action',
+      'Mon suivi',
+      'Recrutement',
+      'Rapport de match',
     ])
-    expect(screen.getByRole('button', { name: 'Matchups' })).toBeDisabled()
-    // Filtres permanents, en vocabulaire football.
-    expect(await screen.findByRole('button', { name: 'Long (≥ 7)' })).toBeInTheDocument()
+    // Situations prêtes en un clic, filtres détaillés repliés mais disponibles.
+    expect(await screen.findByRole('button', { name: '3e tentative et long' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Plus de filtres' }))
+    expect(screen.getByRole('button', { name: 'Long (7 et +)' })).toBeInTheDocument()
     expect(screen.queryByText(/pff_/)).toBeNull()
   })
 })

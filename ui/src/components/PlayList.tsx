@@ -1,5 +1,5 @@
 import type { SnapRow } from '../api'
-import { BLOCK_TYPES, downDistance, secs } from '../format'
+import { BLOCK_TYPES, causeLabel, downDistance, secs } from '../format'
 
 export interface OpenPlay {
   gameId: number
@@ -23,10 +23,10 @@ export function PlayList({ rows, nflId, title, countedLabel, onOpen, jumpTo = 'd
   return (
     <section className="playlist" aria-label={title}>
       <h3>
-        {title} <span className="muted">({rows.length} jeux)</span>
+        {title} <span className="muted">({rows.length} actions)</span>
       </h3>
       {rows.length === 0 ? (
-        <p className="muted">Aucun jeu avec ces filtres.</p>
+        <p className="muted">Aucune action dans cette situation.</p>
       ) : (
         <ul>
           {rows.map((r) => (
@@ -45,17 +45,22 @@ export function PlayList({ rows, nflId, title, countedLabel, onOpen, jumpTo = 'd
                 }
               >
                 <span className="playrow__when">
-                  S{r.week} · Q{r.quarter} {r.gameClock} · vs {r.defensiveTeam}
+                  Semaine {r.week} · {r.quarter}e QT {r.gameClock} · contre {r.defensiveTeam}
                 </span>
                 <span className="playrow__dd">{downDistance(r.down, r.yardsToGo)}</span>
                 <span className="playrow__desc">{r.playDescription}</span>
                 <span className="playrow__facts">
-                  {r.pff_positionLinedUp} · {BLOCK_TYPES[r.pff_blockType ?? ''] ?? 'Sans bloc noté'}
+                  {r.pff_positionLinedUp} · {BLOCK_TYPES[r.pff_blockType ?? ''] ?? 'Type de bloc non noté'}
                   {r.blockedName ? ` · face à ${r.blockedName}` : ''}
                 </span>
                 <span className="playrow__times">
-                  Défaite {secs(r.defeat_t)} · Pression {secs(r.ttp)} · Passe {secs(r.t_end)}
+                  Battu à {secs(r.defeat_t)} · pression à {secs(r.ttp)} · lancer à {secs(r.t_end)}
                 </span>
+                {r.cause && (
+                  <span className="playrow__cause" title={r.reason ?? undefined}>
+                    Cause probable : {causeLabel(r.cause)}
+                  </span>
+                )}
                 {r.counted && <span className="playrow__badge">{countedLabel}</span>}
               </button>
             </li>

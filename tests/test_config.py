@@ -18,6 +18,7 @@ EXPECTED_THRESHOLDS = {
     "set_min_retreat_yd": 0.2,
     "power_min_retreat_yd": 1.5,
     "power_min_rusher_speed_yd_s": 2.0,
+    "badge_context_gap_pts": 0.15,
 }
 
 

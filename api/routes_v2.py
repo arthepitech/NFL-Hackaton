@@ -18,12 +18,12 @@ router = APIRouter(prefix="/api")
 
 LEFT_SIDE = {"LT", "LG"}
 RADAR_AXES = {
-    "PP": "Protection standard",
-    "PA": "Play action",
-    "SW": "Switch / stunt",
-    "island": "Seul (island)",
-    "fast": "Face à un rusher rapide",
-    "heavy": "Face à un rusher lourd",
+    "PP": "Protection classique",
+    "PA": "Feinte de course",
+    "SW": "Échange de défenseurs",
+    "island": "Sans aide",
+    "fast": "Contre un défenseur rapide",
+    "heavy": "Contre un défenseur lourd",
 }
 
 
@@ -115,7 +115,7 @@ def matchups(
 
 
 def _projection(store: Store, team: str, opponent: str, rows: list[dict]) -> list[dict]:
-    """Duels attendus : alignement habituel des rushers adverses → OL en face (décision 0005 §10)."""
+    """Duels attendus : alignement habituel du rusher → OL en face (décision 0005 §10)."""
     rushers = (
         store.snaps_dl.filter(pl.col("defensiveTeam") == opponent)
         .group_by("nflId")
@@ -505,9 +505,9 @@ class PlaylistIn(BaseModel):
 
 
 class ItemIn(BaseModel):
-    gameId: int
-    playId: int
-    nflId: int
+    gameId: int  # noqa: N815 (clé de jointure, CLAUDE.md §4.1)
+    playId: int  # noqa: N815
+    nflId: int  # noqa: N815
     t: float | None = None
     comment: str = ""
 

@@ -20,3 +20,6 @@ ui/dist/
 
 # Captures avec chiffres PFF / NGS : jointes aux PR, jamais commitées (CLAUDE.md §4.4, §9)
 docs/screenshots/mvp-*
+docs/screenshots/v2-*
+docs/screenshots/v3-*
+docs/screenshots/ux-*

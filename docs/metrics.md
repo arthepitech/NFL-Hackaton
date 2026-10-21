@@ -50,3 +50,22 @@ Une ligne avec `pff_role == "Pass Rush"`. Table : `snaps_dl.parquet`.
   - Avec 1,5 yd et 2,5 s, la pression arrive rarement aussi tôt : le TTP médian est de 3,1 s.
   - Résultat : 74 OL sur 180 éligibles en alerte d'écart. Le seuil `pressure_radius_yd` est une proposition du cahier, à calibrer sur clips.
 - **Instant de défaite** : il se déclenche encore sur 32 % des snaps notés gagnés par PFF, contre 73 % des snaps perdus. Il mesure un franchissement géométrique, pas une défaite certaine : à valider sur clips.
+
+## V2 (décision 0005)
+
+| Métrique | Définition | Module |
+| --- | --- | --- |
+| **Blocs gagnés seul**, Island Win Rate | PBWR PFF sur les snaps où aucun autre joueur ne bloque le même défenseur en CH, BH, PU ou SW | `metrics/island.py` |
+| **Vitesse du rusher** | max(`s`) sur [0, `fast_rusher_window_s`] ; rapide si ≥ `fast_rusher_yd_s` (curseur réglable) | `metrics/speed.py` |
+| **Rusher lourd** | poids ≥ quantile `heavy_rusher_pct` des rushers | `api/routes_v2.py` |
+| **Paquet de pression** | nombre de `Pass Rush` du jeu ; blitz si ≥ `blitz_min_rushers` ; TTP du jeu = TTP du rusher le plus rapide | `metrics/pressure_package.py` |
+| **Gap d'origine** | position du rusher quand il atteint la profondeur moyenne des 5 OL (sinon au moment de sa pression) : A, B, C, extérieur, côté gauche ou droit | `metrics/gap.py` |
+| **Cause probable** | Switch / stunt, Set ou Puissance (règles et seuils `set_*`, `power_*`), sinon Indéterminé ; confirmée ou corrigée par le coach | `metrics/diagnosis.py` |
+| **Couverture × situation** | yards par jeu (`playResult`), complétion (C ÷ C+I+IN), taux de 1st down (`playResult ≥ yardsToGo`). EPA absent (nflverse non joint) | `api/routes_v2.py` |
+
+Limite connue : `fast_rusher_yd_s = 8.0` n'est atteint sur aucun snap. Le 99e centile des edge rushers est à 6,3 yd/s (décision 0005 §9).
+
+## V3 — Badges (décision 0006)
+- **Vert / rouge** : top / bottom 10 % des OL du poste (n ≥ `min_snaps_display`).
+- **Rouge de contexte** : PBWR PFF sur les blocs SW ou PA inférieur d'au moins `badge_context_gap_pts` au PBWR global.
+- Chaque badge affiche son n.
