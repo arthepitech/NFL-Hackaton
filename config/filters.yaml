@@ -1,0 +1,13 @@
+# Bornes des filtres de situation (CLAUDE.md §7, décision 0004 §4)
+distance_buckets:            # yardsToGo
+  court: [1, 3]
+  moyen: [4, 6]
+  long: [7, 99]
+score_buckets:               # score attaque − score défense
+  mene_9_plus: [-99, -9]
+  mene_1_8: [-8, -1]
+  egalite: [0, 0]
+  devant_1_8: [1, 8]
+  devant_9_plus: [9, 99]
+red_zone_yards: 20
+package_max: 6                # paquets de pression : « 6 et plus » (cahier)

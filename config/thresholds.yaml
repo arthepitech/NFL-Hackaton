@@ -1,0 +1,14 @@
+pressure_radius_yd: 1.5      # proposition, à valider avec le staff
+win_window_s: 2.5            # standard ESPN PBWR/PRWR
+fast_rusher_yd_s: 8.0        # ≈ 18 mph, curseur réglable
+fast_rusher_window_s: 1.5
+min_snaps_display: 100
+badge_top_pct: 0.10
+badge_bottom_pct: 0.10
+blitz_min_rushers: 5
+# V2 — ajouts signalés (décision 0005), propositions à valider avec le staff
+heavy_rusher_pct: 0.75       # rusher « lourd » : quart supérieur des poids des rushers
+set_window_s: 0.5            # diagnostic Set : fenêtre d'observation du recul du bloqueur
+set_min_retreat_yd: 0.2      # diagnostic Set : quartile bas du recul des tackles en 0,5 s (2021)
+power_min_retreat_yd: 1.5    # diagnostic Puissance : recul du bloqueur vers le QB
+power_min_rusher_speed_yd_s: 2.0  # diagnostic Puissance : vitesse conservée par le rusher

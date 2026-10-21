@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NFL Play Explorer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">🏈 NFL Play Explorer</div>
+    <nav class="tabs">
+      <button class="tab active" data-view="explorer">Matchs</button>
+      <button class="tab" data-view="coverage">Défense</button>
+      <button class="tab" data-view="pressure">Pression</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- VUE EXPLORER -->
+    <section id="view-explorer" class="view active">
+      <aside class="sidebar">
+        <h2>Choisis un match</h2>
+        <label>Semaine
+          <select id="week-select"></select>
+        </label>
+        <ul id="game-list" class="game-list"></ul>
+      </aside>
+
+      <div class="content">
+        <div id="play-browser" class="hidden">
+          <h2 id="matchup-title"></h2>
+          <div class="play-filters">
+            <input id="play-search" type="text" placeholder="Filtrer les actions (ex: touchdown, Brady)..." />
+          </div>
+          <ul id="play-list" class="play-list"></ul>
+        </div>
+        <div id="empty-hint" class="hint">Sélectionne un match à gauche pour voir ses actions.</div>
+      </div>
+
+      <div class="viz-panel">
+        <div id="play-info" class="play-info hidden"></div>
+        <div id="field-wrap" class="field-wrap hidden">
+          <div id="scene3d"></div>
+          <div class="controls">
+            <button id="btn-play">▶ Lire</button>
+            <input id="frame-slider" type="range" min="0" max="0" value="0" />
+            <span id="frame-label">0 / 0</span>
+            <button id="btn-cam" class="ghost" title="Changer de vue">🎥 Vue</button>
+          </div>
+          <div id="event-label" class="event-label"></div>
+          <div class="legend">
+            <span class="legend-item"><span class="dot" id="leg-off"></span> <span id="leg-off-txt">Offense</span></span>
+            <span class="legend-item"><span class="dot" id="leg-def"></span> <span id="leg-def-txt">Défense</span></span>
+            <span class="legend-item"><span class="dot ball"></span> Ballon</span>
+            <span class="hint-mini">Glisse pour pivoter · molette pour zoomer</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VUE COVERAGE -->
+    <section id="view-coverage" class="view">
+      <div class="panel">
+        <h2>Schémas défensifs par équipe</h2>
+        <label>Équipe
+          <select id="team-select"></select>
+        </label>
+        <div id="coverage-result"></div>
+      </div>
+    </section>
+
+    <!-- VUE PRESSURE -->
+    <section id="view-pressure" class="view">
+      <div class="panel">
+        <h2>Qui met le plus de pression ?</h2>
+        <p class="muted">Classement des pass rushers : coups (hits) + gênes (hurries) + sacks.</p>
+        <div id="pressure-result"></div>
+      </div>
+    </section>
+  </main>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="field3d.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

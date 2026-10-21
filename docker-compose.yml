@@ -1,0 +1,44 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: trenchlab-api
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - DATA_RAW_PATH=/app/data
+      - DATA_PROCESSED_PATH=/app/data/processed
+    volumes:
+      # Code monté pour rechargement à chaud
+      - ./api:/app/api
+      - ./etl:/app/etl
+      - ./metrics:/app/metrics
+      - ./config:/app/config
+      - ./tests:/app/tests
+      - ./docs:/app/docs
+      - ./Makefile:/app/Makefile
+      - ./pyproject.toml:/app/pyproject.toml
+      # Données (décision 0001) : CSV bruts en lecture seule, Parquet générés en écriture.
+      - ./data:/app/data:ro
+      - ./data/processed:/app/data/processed:rw
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    container_name: trenchlab-ui
+    ports:
+      - "5173:5173"
+    environment:
+      # Cible du proxy Vite /api, résolue dans le réseau Docker.
+      - VITE_API_URL=http://api:8000
+    volumes:
+      - ./ui:/app
+      - /app/node_modules
+    depends_on:
+      - api
+    command: npm run dev -- --host 0.0.0.0

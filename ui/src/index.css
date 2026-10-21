@@ -1,0 +1,527 @@
+/* Tablette d'abord, mode sombre (CLAUDE.md §7). Code couleur : VISUALISATIONS.md §4. */
+:root {
+  --bg: #0f1216;
+  --surface: #181d23;
+  --text: #e8ecf1;
+  --text-muted: #9aa4b1;
+  --top: #2fbf71;
+  --bottom: #e5484d;
+  --team: #3b82f6;
+  --opponent: #f59e0b;
+  --context: #6b7280;
+  --touch-min: 44px;
+
+  color-scheme: dark;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.shell {
+  padding: 16px;
+}
+
+.shell__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.shell__header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.shell__header nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .tab {
+    padding: 0 10px;
+    font-size: 0.9rem;
+  }
+}
+
+.tab {
+  min-height: var(--touch-min);
+  min-width: var(--touch-min);
+  padding: 0 16px;
+  border: 1px solid var(--context);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.tab:disabled {
+  color: var(--text-muted);
+}
+
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+select,
+.controls button,
+.chip,
+.toggle,
+.picker select {
+  min-height: var(--touch-min);
+}
+
+select {
+  padding: 0 10px;
+  border: 1px solid var(--context);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.tab--on {
+  border-color: var(--team);
+  color: var(--text);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.error,
+.alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(229, 72, 77, 0.15);
+  border: 1px solid var(--bottom);
+}
+
+.alert {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: var(--opponent);
+}
+
+/* Filtres permanents */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: flex-end;
+  margin: 16px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.filters__group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.filters__select,
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filters__label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.chip {
+  min-width: var(--touch-min);
+  padding: 0 12px;
+  border: 1px solid var(--context);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.chip--on {
+  background: var(--team);
+  border-color: var(--team);
+}
+
+.chip--reset {
+  border-style: dashed;
+}
+
+/* Scout Card */
+.picker select {
+  max-width: 100%;
+  font-size: 1.05rem;
+}
+
+.scout__header h2 {
+  margin: 16px 0 4px;
+  font-size: 1.8rem;
+}
+
+.scout__header p {
+  margin: 0 0 12px;
+  color: var(--text-muted);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 120px;
+  padding: 14px;
+  border: 2px solid var(--context);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.tile__label {
+  color: var(--text-muted);
+}
+
+.tile__value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tile__n {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.tile__tier {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.tile--top {
+  border-color: var(--top);
+}
+
+.tile--top .tile__tier {
+  color: var(--top);
+}
+
+.tile--bottom {
+  border-color: var(--bottom);
+}
+
+.tile--bottom .tile__tier {
+  color: var(--bottom);
+}
+
+.tile--low .tile__value,
+.tile--low dd {
+  color: var(--context);
+}
+
+.tile--selected {
+  outline: 3px solid var(--team);
+  outline-offset: 2px;
+}
+
+.legend,
+.field__legend {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.legend__swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  vertical-align: -2px;
+}
+
+.legend__swatch--top {
+  background: var(--top);
+}
+
+.legend__swatch--bottom {
+  background: var(--bottom);
+}
+
+.scout__lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toggle input {
+  width: 24px;
+  height: 24px;
+}
+
+.playlist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.playrow {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  min-height: var(--touch-min);
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--context);
+  border-left: 4px solid var(--context);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.playrow--counted {
+  border-left-color: var(--bottom);
+}
+
+.playrow__when,
+.playrow__facts,
+.playrow__times {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.playrow__dd {
+  font-weight: 600;
+}
+
+.playrow__desc {
+  font-size: 0.95rem;
+}
+
+.playrow__badge {
+  justify-self: start;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(229, 72, 77, 0.2);
+  font-size: 0.8rem;
+}
+
+/* Play Lab */
+.playlab__header h2 {
+  margin: 12px 0 4px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.controls button:not(.chip) {
+  min-width: var(--touch-min);
+  padding: 0 14px;
+  border: 1px solid var(--context);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.controls__play {
+  min-width: 110px;
+  background: var(--team) !important;
+}
+
+.controls input[type='range'] {
+  flex: 1 1 200px;
+  min-height: var(--touch-min);
+}
+
+.controls__time {
+  font-variant-numeric: tabular-nums;
+  min-width: 80px;
+}
+
+.playlab__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 16px;
+}
+
+@media (max-width: 1000px) {
+  .playlab__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field canvas {
+  display: block;
+  border-radius: 8px;
+}
+
+.video {
+  margin: 0;
+}
+
+.video canvas {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.video figcaption {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.timeline {
+  width: 100%;
+  height: auto;
+}
+
+.timeline__title {
+  fill: var(--text-muted);
+  font-size: 13px;
+}
+
+.timeline__axis text {
+  fill: var(--text-muted);
+  font-size: 12px;
+}
+
+.timeline__axis path,
+.timeline__axis line {
+  stroke: var(--context);
+}
+
+.timeline__line {
+  fill: none;
+  stroke: var(--team);
+  stroke-width: 2;
+}
+
+.timeline__ref {
+  stroke: var(--text);
+  stroke-dasharray: 2 4;
+}
+
+.timeline__cursor {
+  stroke: var(--text);
+  stroke-width: 2;
+}
+
+.timeline__marker {
+  font-size: 12px;
+}
+
+/* J1 : carte joueur */
+.pcard {
+  max-width: 420px;
+  margin: 16px auto;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--surface);
+  touch-action: pan-y;
+}
+
+.pcard header {
+  display: grid;
+  grid-template-columns: var(--touch-min) 1fr var(--touch-min);
+  align-items: center;
+  text-align: center;
+}
+
+.pcard header h2 {
+  margin: 0;
+}
+
+.pcard header button {
+  height: var(--touch-min);
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-size: 2rem;
+}
+
+.pcard__stats {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.pcard__stats div {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.pcard__stats dt {
+  color: var(--text-muted);
+}
+
+.pcard__stats dd {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.pcard__stats dd.muted {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.badge {
+  padding: 8px 12px;
+  border-radius: 999px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.badge--top {
+  background: rgba(47, 191, 113, 0.2);
+  color: var(--top);
+}
+
+.badge--bottom {
+  background: rgba(229, 72, 77, 0.2);
+  color: var(--bottom);
+}

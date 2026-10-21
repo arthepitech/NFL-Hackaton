@@ -1,0 +1,22 @@
+# Données sous licence (PFF / NGS / BDB) : jamais commitées
+data/
+
+# Secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+*.egg-info/
+htmlcov/
+
+# UI
+ui/node_modules/
+ui/dist/
+
+# Captures avec chiffres PFF / NGS : jointes aux PR, jamais commitées (CLAUDE.md §4.4, §9)
+docs/screenshots/mvp-*

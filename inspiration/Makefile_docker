@@ -1,0 +1,26 @@
+.PHONY: up down build test lint check-metrics shell-api logs
+
+up:
+	docker compose up -d
+
+down:
+	docker compose down
+
+build:
+	docker compose build
+
+test:
+	docker compose run --rm api pytest tests/ --cov=metrics --cov=etl --cov-report=term-missing
+
+lint:
+	docker compose run --rm api ruff check api/ metrics/ etl/ tests/ config/
+	docker compose run --rm api mypy metrics/ etl/ api/
+
+check-metrics:
+	docker compose run --rm api python -m metrics.check_metrics
+
+shell-api:
+	docker compose exec api /bin/bash
+
+logs:
+	docker compose logs -f

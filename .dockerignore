@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+.venv
+ui
+data
+docs
+tests
+inspiration
+.git
+*.egg-info

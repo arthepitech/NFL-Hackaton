@@ -1,0 +1,42 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: trenchlab-api
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - DATA_RAW_PATH=/app/data/raw
+      - DATA_PROCESSED_PATH=/app/data/processed
+    volumes:
+      # Code monté pour rechargement à chaud
+      - ./api:/app/api
+      - ./etl:/app/etl
+      - ./metrics:/app/metrics
+      - ./config:/app/config
+      - ./tests:/app/tests
+      - ./docs:/app/docs
+      - ./Makefile:/app/Makefile
+      # Données : RAW en lecture seule absolue (Règle 4.1 CLAUDE.md), PROCESSED en écriture
+      - ./data/raw:/app/data/raw:ro
+      - ./data/processed:/app/data/processed:rw
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    container_name: trenchlab-ui
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    volumes:
+      - ./ui:/app
+      - /app/node_modules
+    depends_on:
+      - api
+    command: npm run dev -- --host 0.0.0.0
