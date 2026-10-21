@@ -1,5 +1,6 @@
 """API Trench Lab : `uvicorn api.main:app`."""
 
+import os
 from pathlib import Path
 
 from fastapi import FastAPI
