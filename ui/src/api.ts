@@ -134,7 +134,17 @@ export function toQuery(filters: Filters, extra: Record<string, string | number 
   return s ? `?${s}` : ''
 }
 
-const API_BASE = (import.meta.env.VITE_API_URL ? String(import.meta.env.VITE_API_URL).replace(/\/$/, '') : '') + '/api'
+function getApiBase(): string {
+  const env = import.meta.env.VITE_API_URL
+  if (!env) return '/api'
+  const clean = String(env).trim().replace(/\/$/, '')
+  return clean.endsWith('/api') ? clean : `${clean}/api`
+}
+
+const API_BASE = getApiBase()
+if (typeof window !== 'undefined') {
+  console.log('[Trench Lab] API connectée sur :', API_BASE)
+}
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`)

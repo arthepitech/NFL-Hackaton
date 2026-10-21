@@ -3,6 +3,9 @@
 > **Outil d'analyse NFL pour coachs, joueurs et recruteurs (Big Data Bowl 2023).**  
 > *« Répondre en moins de 10 secondes à une question de coach, avec le jeu (tracking 2D/3D + vidéo) à l'appui. »*
 
+https://nfl-hackaton-gsednkmqk-arthepitechs-projects.vercel.app/
+## l'api peut ne pas marcher et dans ce cas lancer en local
+
 ---
 
 ## 🎬 Démonstration
